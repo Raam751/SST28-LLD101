@@ -2,7 +2,7 @@ import java.nio.charset.StandardCharsets;
 
 public class JsonExporter extends Exporter {
     @Override
-    protected ExportResult encode(ExportRequest req) {
+    public ExportResult encode(ExportRequest req) {
         String json = "{\"title\":\"" + escape(req.title) + "\",\"body\":\"" + escape(req.body) + "\"}";
         return new ExportResult("application/json", json.getBytes(StandardCharsets.UTF_8));
     }

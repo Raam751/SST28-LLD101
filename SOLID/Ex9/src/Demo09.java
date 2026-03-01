@@ -1,0 +1,16 @@
+public class Demo09 {
+    public static void main(String[] args) {
+
+        System.out.println("=== Evaluation Pipeline ===");
+        Submission sub = new Submission("23BCS1007", "public class A{}", "A.java");
+        Checker checker = new PlagiarismChecker();
+        Grader grader = new CodeGrader();
+        Writer writer = new ReportWriter();
+        new EvaluationPipeline(checker, grader, writer).evaluate(sub);
+
+        // Same pipeline, different grading strategy — just swap one line!
+        System.out.println("\n=== Strict Evaluation ===");
+        Grader strictGrader = new StrictGrader();
+        new EvaluationPipeline(checker, strictGrader, writer).evaluate(sub);
+    }
+}

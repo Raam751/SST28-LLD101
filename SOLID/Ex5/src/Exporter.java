@@ -34,5 +34,5 @@ public abstract class Exporter {
         return result;
     }
 
-    protected abstract ExportResult encode(ExportRequest req);
+    public abstract ExportResult encode(ExportRequest req);
 }
