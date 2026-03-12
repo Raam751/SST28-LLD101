@@ -55,3 +55,23 @@ JSON: OK bytes=61
 
 ## 10. Stretch goals
 - Add a new exporter without changing existing exporters.
+
+---
+
+**Step 1 — State the problem:**
+"This exercise is about LSP — Liskov Substitution Principle. We have an exporter hierarchy where a base Exporter class has subclasses for PDF, CSV, JSON, and XML. The problem was that each subclass behaved differently — PdfExporter threw exceptions for large content, CsvExporter silently corrupted data, and JsonExporter handled null differently. You couldn't safely swap one for another."
+
+**Step 2 — Explain the violation:**
+"LSP says if you replace a parent with any child, the program should still work correctly. Here, PdfExporter tightened the preconditions by rejecting large content that the base class would have accepted. That's an LSP violation — the subclass is more restrictive than the parent."
+
+**Step 3 — Show the fix (open Exporter.java):**
+"I used the Template Method pattern. The `export()` method in the base class is `final` — no subclass can override it. It handles all the common stuff: null checks, blank title validation, and running any format-specific constraints. Subclasses only override `encode()`, which does pure format conversion."
+
+**Step 4 — Show DeliveryConstraint (open Demo05.java):**
+"The PDF's 20-char limit was moved OUT of PdfExporter and into a pluggable DeliveryConstraint. In Demo05, we attach the constraint externally: `pdf.setConstraint(r -> ...)`. This way PdfExporter itself doesn't break LSP — the restriction is optional and configurable."
+
+**Step 5 — Show a subclass (open PdfExporter.java):**
+"See how simple the subclass is now? Just 3 lines of actual code. It only does encoding — no validation, no exceptions, no special cases. All exporters follow the same contract."
+
+**Step 6 — Key takeaway:**
+"By locking the algorithm in the base class and letting subclasses only handle encoding, we guarantee LSP. Any exporter can replace any other without surprises."

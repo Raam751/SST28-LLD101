@@ -40,3 +40,27 @@ Build & Run
 Repo intent
 This is a refactoring assignment: the starter code works, but it does not use Proxy properly.
 Students should refactor the design so access control + lazy loading happen via a proxy.
+
+---
+
+
+**Step 1 — State the problem:**
+"CampusVault is a tool that opens internal reports. The original code had three problems: no access control — any user could open any report; no lazy loading — the expensive file reading happened immediately every time; and no caching — the same report could be loaded multiple times."
+
+**Step 2 — Explain the Proxy concept:**
+"Think of a library front desk. You don't walk into the back room and grab rare books yourself. The front desk checks your ID, fetches the book for you, and if you ask for the same book again, they already have it at the desk. That's a Proxy — it sits between you and the real thing."
+
+**Step 3 — Show Report interface:**
+"Report is a simple interface: void display(User user). Both RealReport and ReportProxy implement it. The client doesn't know which one it's talking to."
+
+**Step 4 — Show RealReport.java:**
+"RealReport does the expensive work — the file loading happens in its constructor with a simulated 120ms delay. Once loaded, display() just prints the content."
+
+**Step 5 — Show ReportProxy.java:**
+"ReportProxy is the heart of the pattern. It does three things in display(): First, it checks access using AccessControl — if the user's role doesn't match the report classification, it prints ACCESS DENIED and returns immediately, never loading the report. Second, if access is granted and cachedReport is null, it creates a RealReport — this is the lazy loading. Third, it caches the RealReport so the next call skips loading."
+
+**Step 6 — Show the output proof:**
+"In the output, when student Jasleen tries to open a FACULTY report, we see ACCESS DENIED — no disk loading happened. When admin Kshitij opens the budget audit twice, the disk loading message appears only once — the second time it's served from cache."
+
+**Step 7 — Key takeaway:**
+"The Proxy pattern lets you add cross-cutting concerns — access control, lazy loading, caching — without touching the real object. ReportViewer doesn't even know it's talking to a proxy."

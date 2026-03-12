@@ -50,3 +50,24 @@ Summary: ledgerBalance=5000, minutes=1, events=1
 
 ## 10. Stretch goals
 - Add “publicity lead” without implementing finance methods.
+
+---
+
+
+**Step 1 — State the problem:**
+"This is another ISP exercise. We had a student club management system where one fat interface called ClubAdminTools had methods for finances, minutes, and events. The Treasurer had to implement addMinutes() and createEvent() even though they only handle money. The Secretary had to implement addLedgerEntry() even though they only write minutes."
+
+**Step 2 — Show the impact:**
+"These dummy implementations are dangerous. If someone accidentally calls treasurer.addMinutes(), it either does nothing silently or throws an exception. Both are bad — silent failure hides bugs, and exceptions crash the app."
+
+**Step 3 — Show the fix:**
+"I split ClubAdminTools into three focused interfaces: FinanceOps (addLedgerEntry, getBalance), MinuteOps (addMinutes, getMinutesCount), and EventOps (createEvent, getEventCount). Each role tool implements only the interfaces relevant to its role."
+
+**Step 4 — Show a concrete tool:**
+"TreasurerTool implements only FinanceOps. SecretaryTool implements only MinuteOps. EventLeadTool implements only EventOps. No dummy methods anywhere."
+
+**Step 5 — Show ClubConsole:**
+"ClubConsole now accepts the specific interface it needs for each operation. When it needs to add a ledger entry, it asks for FinanceOps. When it needs to add minutes, it asks for MinuteOps. It never depends on methods it doesn't use."
+
+**Step 6 — Key takeaway:**
+"ISP is about matching interfaces to client needs. By splitting the fat interface into role-specific ones, each client depends only on what it actually uses, and each implementation only provides what it can actually do."

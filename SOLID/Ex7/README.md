@@ -55,3 +55,25 @@ AC OFF
 
 ## 10. Stretch goals
 - Add a “smart board” device without implementing unrelated methods.
+
+---
+
+
+
+**Step 1 — State the problem:**
+"This is about ISP — Interface Segregation Principle. We had one fat interface called SmartClassroomDevice with methods like powerOn(), powerOff(), setBrightness(), setTemperature(), scanAttendance(), connectInput(). Every device — Projector, Lights, AC, Scanner — had to implement ALL these methods even if they didn't support them."
+
+**Step 2 — Show the problem with a concrete example:**
+"An AirConditioner had to implement setBrightness() and connectInput() — things an AC can't do. These were dummy implementations that either did nothing or threw exceptions. That's dangerous because someone could accidentally call ac.setBrightness() and get silent failure."
+
+**Step 3 — Show the fix:**
+"I split the fat interface into small, capability-based interfaces: Switchable (powerOn/powerOff), BrightnessControllable (setBrightness), TemperatureControllable (setTemperature), Scannable (scanAttendance), InputConnectable (connectInput). Each device now implements only what it actually supports."
+
+**Step 4 — Show a device (open Projector.java):**
+"Projector implements Switchable, InputConnectable, and Scannable — exactly what a projector can do. AirConditioner implements only Switchable and TemperatureControllable. No dummy methods anywhere."
+
+**Step 5 — Show DeviceRegistry:**
+"The registry stores devices as Object and retrieves them by capability. When the controller needs all Switchable devices, it asks for that interface specifically. This means the controller depends only on the interfaces it needs."
+
+**Step 6 — Key takeaway:**
+"ISP says no client should be forced to depend on methods it doesn't use. By splitting the fat interface, each device implements only relevant methods, and each client depends only on the capabilities it needs."

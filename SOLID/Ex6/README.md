@@ -50,3 +50,21 @@ AUDIT entries=3
 
 ## 10. Stretch goals
 - Add a new sender without editing existing ones.
+
+---
+
+
+**Step 1 — State the problem:**
+"This is another LSP exercise. We had a notification system with Email, SMS, and WhatsApp senders. The problem was severe — EmailSender silently truncated messages, WhatsAppSender rejected non-E.164 phone numbers, and SmsSender ignored the subject field. Each subclass broke the parent contract in a different way."
+
+**Step 2 — Explain why inheritance was wrong here:**
+"The issue was forcing Email, SMS, and WhatsApp into the same inherited contract. They have fundamentally different requirements — email needs a subject, SMS doesn't; WhatsApp needs a + country code, email needs @. Forcing them into one hierarchy creates LSP violations."
+
+**Step 3 — Show the fix:**
+"I removed the broken inheritance and introduced separate Payload objects for each channel — EmailPayload, SmsPayload, WhatsAppPayload. Each has exactly the fields that channel needs. Then I used Generics — `NotificationSender<T>` — so each sender declares what payload type it accepts. This way the type system prevents mismatched data at compile time."
+
+**Step 4 — Show NotificationTranslator:**
+"To keep backward compatibility, there's a NotificationTranslator that converts the generic Notification into channel-specific payloads. Each channel validates its own rules in one place."
+
+**Step 5 — Key takeaway:**
+"Instead of forcing different things into one hierarchy, we gave each channel its own precise contract. Generics enforce type safety at compile time, not runtime. This completely eliminates LSP violations."
